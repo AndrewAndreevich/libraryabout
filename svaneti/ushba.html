@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Octahedral Impostor Viewer</title>
+    <style>
+      html, body { margin: 0; height: 100%; overflow: hidden; background: #2a2a30; }
+      #app { position: fixed; inset: 0; }
+      .hud {
+        position: fixed; font: 12px/1.5 monospace; color: #cfd2dc;
+        background: rgba(20, 20, 26, 0.75); border: 1px solid #44545a;
+        border-radius: 4px; padding: 6px 10px; user-select: none; z-index: 10;
+        box-sizing: border-box;
+      }
+      #fps { top: 10px; left: 10px; }
+      #frameInfo { top: 46px; left: 10px; display: none; white-space: pre; }
+      #debugToggle { bottom: 10px; left: 10px; cursor: pointer; }
+      #debugToggle:hover { background: rgba(50, 50, 66, 0.9); }
+      #consoleToggle { bottom: 10px; left: 90px; cursor: pointer; }
+      #consoleToggle:hover { background: rgba(50, 50, 66, 0.9); }
+      #consolePanel {
+        left: 10px; right: 10px; bottom: 46px; top: 46px;
+        overflow-y: auto; display: none; white-space: pre-wrap; word-break: break-all;
+        font-size: 11px; line-height: 1.4;
+      }
+      #consolePanel.visible { display: block; }
+      .console-line { padding: 2px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .console-line.warn { color: #e3c9a6; }
+      .console-line.error { color: #ff8a8a; }
+      .console-line .console-time { color: #6b7280; margin-right: 6px; }
+
+      #examplesPanel {
+        top: 10px; right: 10px; padding: 0; width: 300px;
+        max-height: calc(100vh - 20px); overflow-y: auto;
+      }
+      #examplesPanel.collapsed { display: none; }
+      #examplesHeader {
+        padding: 8px 10px; font-weight: bold; border-bottom: 1px solid #3a3f4a;
+        display: flex; justify-content: space-between; align-items: center;
+        position: sticky; top: 0; background: rgba(20, 20, 26, 0.95);
+      }
+      #examplesHeader small { font-weight: normal; color: #8890a0; margin-right: auto; margin-left: 6px; }
+      #examplesHeaderClose {
+        cursor: pointer; color: #9aa2b5; font-weight: normal; font-size: 14px;
+        line-height: 1; padding: 2px 6px; border-radius: 3px;
+      }
+      #examplesHeaderClose:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+      #examplesReopen {
+        top: 10px; right: 10px; cursor: pointer; display: none;
+      }
+      #examplesReopen:hover { background: rgba(50, 50, 66, 0.9); }
+      #examplesReopen.visible { display: block; }
+      .example-row {
+        display: flex; gap: 8px; padding: 8px 10px; cursor: pointer;
+        border-bottom: 1px solid #2f333c; align-items: flex-start;
+      }
+      .example-row:hover { background: rgba(255, 255, 255, 0.05); }
+      .example-row.active { background: rgba(90, 140, 220, 0.18); }
+      .example-row img {
+        width: 48px; height: 48px; object-fit: cover; border-radius: 3px;
+        flex-shrink: 0; border: 1px solid #3a3f4a;
+      }
+      .example-meta { min-width: 0; }
+      .example-title { font-weight: bold; display: flex; align-items: center; gap: 6px; }
+      .example-badge {
+        font-size: 9px; font-weight: normal; padding: 1px 5px; border-radius: 3px;
+        text-transform: uppercase; letter-spacing: 0.03em;
+      }
+      .example-badge.recommended { background: #2f5a3a; color: #a6e3b0; }
+      .example-badge.reference { background: #5a4a2f; color: #e3c9a6; }
+      .example-desc { color: #a8afc0; font-size: 11px; line-height: 1.4; margin-top: 2px; }
+      .example-stats {
+        margin-top: 5px; font-size: 11px; color: #d8dce6;
+        padding-top: 4px; border-top: 1px dashed #3a3f4a;
+      }
+      .example-stats b { color: #fff; }
+      .example-files { margin-top: 3px; }
+      .example-file {
+        display: flex; justify-content: space-between; gap: 8px;
+        font-size: 10px; color: #7d8494; line-height: 1.5;
+      }
+      .example-file span:last-child { color: #9aa2b5; flex-shrink: 0; }
+      .example-ar-link {
+        display: inline-block; margin-top: 7px; font-size: 11px; font-weight: bold;
+        color: #7fb0ff; text-decoration: none;
+      }
+      .example-ar-link:hover { text-decoration: underline; }
+    </style>
+    <script type="module" crossorigin src="/svaneti/assets/main-DksQ9Fdz.js"></script>
+    <link rel="modulepreload" crossorigin href="/svaneti/assets/consoleOverlay-COHY0vmx.js">
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="fps" class="hud">-- fps</div>
+    <div id="frameInfo" class="hud"></div>
+    <button id="debugToggle" class="hud">debug: off</button>
+    <button id="consoleToggle" class="hud">console</button>
+    <div id="consolePanel" class="hud"></div>
+    <div id="examplesPanel" class="hud"></div>
+    <button id="examplesReopen" class="hud">Solutions ▸</button>
+  </body>
+</html>
