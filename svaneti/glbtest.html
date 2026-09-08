@@ -16,13 +16,15 @@ scene.add(new THREE.AmbientLight(0xffffff,0.5));
 const k=new THREE.DirectionalLight(0xffffff,2.2);k.position.set(3,5,2);scene.add(k);
 const cam=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,0.01,100);
 const ctr=new OrbitControls(cam,R.domElement);ctr.autoRotate=true;ctr.autoRotateSpeed=2.5;
-new GLTFLoader().load('/svaneti/models/ushba.glb',(g)=>{
-  const m=g.scene;const box=new THREE.Box3().setFromObject(m);const s=box.getSize(new THREE.Vector3());const c=box.getCenter(new THREE.Vector3());
+new GLTFLoader().load('/svaneti/models/ushba.glb',async(g)=>{
+  const m=g.scene;
+  const tex=await new THREE.TextureLoader().loadAsync('/svaneti/models/ushba_tex.jpg');
+  tex.flipY=false; tex.colorSpace=THREE.SRGBColorSpace;
+  m.traverse(o=>{ if(o.isMesh){ o.material=new THREE.MeshStandardMaterial({map:tex,roughness:0.95,metalness:0}); }});
+  const box=new THREE.Box3().setFromObject(m);const s=box.getSize(new THREE.Vector3());const c=box.getCenter(new THREE.Vector3());
   const md=Math.max(s.x,s.y,s.z);m.position.sub(c);scene.add(m);
-  let matinfo=[];
-  m.traverse(o=>{ if(o.isMesh){const mat=o.material; matinfo.push(`mat: map=${!!mat.map} metal=${mat.metalness} rough=${mat.roughness?.toFixed?.(2)} specInt=${mat.specularIntensity} specColor=${mat.specularColor&&mat.specularColor.getHexString?.()}`);} });
   cam.position.set(0,s.y*0.15,md*1.6);ctr.target.set(0,0,0);ctr.update();
-  info.textContent='OK\n'+matinfo.join('\n');
+  info.textContent='OK external tex + MeshStandard';
 },undefined,(e)=>{info.textContent='ERR '+e;});
 addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();R.setSize(innerWidth,innerHeight);});
 (function loop(){requestAnimationFrame(loop);ctr.update();R.render(scene,cam);})();
