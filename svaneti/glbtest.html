@@ -50,7 +50,7 @@ new GLTFLoader().load('/svaneti/models/ushba.glb',async(g)=>{
   cam.position.set(0,0,Math.max(s.x,s.y,s.z)*norm*1.7);ctr.target.set(0,0,0);ctr.update();
   info.textContent=`OK N=${N} y[${minY.toFixed(1)},${maxY.toFixed(1)}]`;buildStart=performance.now();
 },undefined,e=>info.textContent='ERR '+e);
-function upd(now){if(!fx)return;let t=(now-buildStart)/BUILD_MS;if(t>=1.5){buildStart=now;t=0;}// loop with pause
+function upd(now){if(!fx)return;let t=0.5;// FROZEN mid-build for capture
   if(t>=1){fx.uRevealY.value=1e9;fx.pts.visible=false;return;}fx.pts.visible=true;
   const te=t*t*(3-2*t);const span=fx.maxY-fx.minY;fx.uRevealY.value=fx.minY+span*te;
   const p=fx.pa.array,co=fx.ca.array,c=fx.base;
