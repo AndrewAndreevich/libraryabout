@@ -38,15 +38,16 @@
         cursor: pointer; padding: 0;
       }
       #arRotate button:hover { background: rgba(255,255,255,0.18); }
-      #arRotate #rotReset { width: auto; padding: 2px 6px; margin-top: 2px; }
+      #arRotate #rotReset, #arRotate #gridToggle { width: auto; padding: 2px 6px; }
+      #arRotate #gridToggle.on { background: rgba(0,255,204,0.25); border-color: #00ffcc; }
       #markerHint {
         position: fixed; bottom: 46px; left: 50%; transform: translateX(-50%);
         display: flex; flex-direction: column; align-items: center; gap: 4px;
       }
       #markerHint img { width: 72px; height: 72px; border: 2px solid #cfd2dc; background: #fff; }
     </style>
-    <script type="module" crossorigin src="/svaneti/assets/ar-Ck-pellI.js"></script>
-    <link rel="modulepreload" crossorigin href="/svaneti/assets/consoleOverlay-C7qxUynx.js">
+    <script type="module" crossorigin src="/svaneti/assets/ar--1D-cp0O.js"></script>
+    <link rel="modulepreload" crossorigin href="/svaneti/assets/consoleOverlay-D2NSUDVu.js">
   </head>
   <body>
     <div id="app"></div>
@@ -66,7 +67,7 @@
       <div class="rrow"><span>X</span><button data-pax="x" data-pd="-1">−</button><span class="pval" data-pv="x">0</span><button data-pax="x" data-pd="1">+</button></div>
       <div class="rrow"><span>Y</span><button data-pax="y" data-pd="-1">−</button><span class="pval" data-pv="y">0</span><button data-pax="y" data-pd="1">+</button></div>
       <div class="rrow"><span>Z</span><button data-pax="z" data-pd="-1">−</button><span class="pval" data-pv="z">0</span><button data-pax="z" data-pd="1">+</button></div>
-      <button id="rotReset">reset</button>
+      <div class="rrow" style="gap:6px;margin-top:2px;"><button id="rotReset">reset</button><button id="gridToggle">grid</button></div>
     </div>
     <div id="markerHint">
       <img src="/svaneti/ar/ushba-marker.png?v=barcode" alt="Ushba barcode marker" />
