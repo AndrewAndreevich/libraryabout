@@ -1,0 +1,61 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>html,body{margin:0;height:100%;background:#20242c}#i{position:fixed;top:8px;left:8px;color:#fff;font:12px monospace;z-index:2}</style></head>
+<body><div id="i">loading…</div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.178.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.178.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { MeshSurfaceSampler } from 'three/addons/math/MeshSurfaceSampler.js';
+const info=document.getElementById('i');
+const R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(devicePixelRatio);R.setSize(innerWidth,innerHeight);document.body.appendChild(R.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x20242c);
+const pmrem=new THREE.PMREMGenerator(R);scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
+scene.add(new THREE.AmbientLight(0xffffff,0.5));
+const k=new THREE.DirectionalLight(0xffffff,2.2);k.position.set(3,5,2);scene.add(k);
+const cam=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,0.01,100);
+const ctr=new OrbitControls(cam,R.domElement);
+const sstep=(a,b,x)=>{const t=Math.min(1,Math.max(0,(x-a)/(b-a)));return t*t*(3-2*t);};
+let fx=null,buildStart=-1;const BUILD_MS=2200;
+new GLTFLoader().load('/svaneti/models/ushba.glb',async(g)=>{
+  const model=g.scene;
+  const tex=await new THREE.TextureLoader().loadAsync('/svaneti/models/ushba_tex.jpg');
+  tex.flipY=false;tex.colorSpace=THREE.SRGBColorSpace;
+  model.traverse(o=>{if(o.isMesh)o.material=new THREE.MeshStandardMaterial({map:tex,roughness:0.95,metalness:0});});
+  model.updateWorldMatrix(true,true);
+  const box=new THREE.Box3().setFromObject(model);const s=box.getSize(new THREE.Vector3());const c=box.getCenter(new THREE.Vector3());
+  const norm=2/Math.max(s.x,s.y,s.z);model.position.sub(c);
+  const wrap=new THREE.Group();wrap.add(model);wrap.scale.setScalar(norm);scene.add(wrap);
+  // build fx (mirror of ar.ts)
+  wrap.updateWorldMatrix(true,true);const wrapInv=wrap.matrixWorld.clone().invert();const uRevealY={value:1e9};
+  const meshes=[];model.traverse(o=>{if(o.isMesh)meshes.push(o);});
+  const totalV=meshes.reduce((a,m)=>a+m.geometry.attributes.position.count,0);const TARGET=15000;
+  const targs=[];const _p=new THREE.Vector3();let minY=1e9,maxY=-1e9;
+  for(const mesh of meshes){mesh.updateWorldMatrix(true,false);const m2w=wrapInv.clone().multiply(mesh.matrixWorld);
+    const mat=mesh.material;mat.onBeforeCompile=(sh)=>{sh.uniforms.uRevealY=uRevealY;sh.uniforms.uMeshToWrap={value:m2w};
+      sh.vertexShader='uniform mat4 uMeshToWrap;\nvarying float vWrapY;\n'+sh.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n vWrapY=(uMeshToWrap*vec4(position,1.0)).y;');
+      sh.fragmentShader='uniform float uRevealY;\nvarying float vWrapY;\n'+sh.fragmentShader.replace('#include <dithering_fragment>','if(vWrapY>uRevealY)discard;\n#include <dithering_fragment>').replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\n totalEmissiveRadiance+=vec3(0.5,0.75,1.0)*(1.0-smoothstep(0.0,0.06,uRevealY-vWrapY));');};
+    mat.needsUpdate=true;
+    const cnt=mesh.geometry.attributes.position.count;const n=Math.max(1,Math.round(TARGET*cnt/totalV));const smp=new MeshSurfaceSampler(mesh).build();
+    for(let i=0;i<n;i++){smp.sample(_p);_p.applyMatrix4(m2w);targs.push(_p.x,_p.y,_p.z);if(_p.y<minY)minY=_p.y;if(_p.y>maxY)maxY=_p.y;}}
+  const N=targs.length/3;const targets=new Float32Array(targs);const ny=new Float32Array(N);const pos=new Float32Array(N*3);const col=new Float32Array(N*3);const span=Math.max(1e-6,maxY-minY);
+  for(let i=0;i<N;i++){ny[i]=(targets[i*3+1]-minY)/span;pos[i*3]=targets[i*3];pos[i*3+1]=minY;pos[i*3+2]=targets[i*3+2];}
+  const pg=new THREE.BufferGeometry();const pa=new THREE.BufferAttribute(pos,3);pa.setUsage(THREE.DynamicDrawUsage);const ca=new THREE.BufferAttribute(col,3);ca.setUsage(THREE.DynamicDrawUsage);
+  pg.setAttribute('position',pa);pg.setAttribute('color',ca);
+  const pm=new THREE.PointsMaterial({size:span*0.014,vertexColors:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+  const pts=new THREE.Points(pg,pm);pts.frustumCulled=false;wrap.add(pts);
+  fx={uRevealY,pa,ca,targets,ny,minY,maxY,N,base:new THREE.Color(0.7,0.85,1.0),pts};
+  cam.position.set(0,0,Math.max(s.x,s.y,s.z)*norm*1.7);ctr.target.set(0,0,0);ctr.update();
+  info.textContent=`OK N=${N} y[${minY.toFixed(1)},${maxY.toFixed(1)}]`;buildStart=performance.now();
+},undefined,e=>info.textContent='ERR '+e);
+function upd(now){if(!fx)return;let t=(now-buildStart)/BUILD_MS;if(t>=1.5){buildStart=now;t=0;}// loop with pause
+  if(t>=1){fx.uRevealY.value=1e9;fx.pts.visible=false;return;}fx.pts.visible=true;
+  const te=t*t*(3-2*t);const span=fx.maxY-fx.minY;fx.uRevealY.value=fx.minY+span*te;
+  const p=fx.pa.array,co=fx.ca.array,c=fx.base;
+  for(let i=0;i<fx.N;i++){const nyi=fx.ny[i];const lp=sstep(nyi-0.14,nyi+0.02,te);p[i*3+1]=fx.minY+(fx.targets[i*3+1]-fx.minY)*lp;const e=sstep(0,0.15,lp)*(1-sstep(0.82,1,lp));co[i*3]=c.r*e;co[i*3+1]=c.g*e;co[i*3+2]=c.b*e;}
+  fx.pa.needsUpdate=true;fx.ca.needsUpdate=true;}
+addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();R.setSize(innerWidth,innerHeight);});
+(function loop(){requestAnimationFrame(loop);upd(performance.now());ctr.update();R.render(scene,cam);})();
+</script></body></html>
