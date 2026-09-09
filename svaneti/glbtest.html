@@ -1,0 +1,40 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>html,body{margin:0;height:100%;background:#20242c}#i{position:fixed;top:8px;left:8px;color:#fff;font:12px monospace;z-index:2}</style></head>
+<body><div id="i">loading…</div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.178.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.178.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+const info=document.getElementById('i');
+const R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(devicePixelRatio);R.setSize(innerWidth,innerHeight);document.body.appendChild(R.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x20242c);
+const pmrem=new THREE.PMREMGenerator(R);scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
+scene.add(new THREE.AmbientLight(0xffffff,0.6));const k=new THREE.DirectionalLight(0xffffff,2);k.position.set(3,5,2);scene.add(k);
+// a horizontal floor grid at y=0 (world). Model should stand upright ON it.
+const floor=new THREE.GridHelper(3,12,0x00ffcc,0x2f6f63);scene.add(floor);
+scene.add(new THREE.AxesHelper(1.2));
+const cam=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,0.01,100);
+const ctr=new OrbitControls(cam,R.domElement);ctr.autoRotate=true;ctr.autoRotateSpeed=1.6;
+new GLTFLoader().load('/svaneti/models/ushba.glb',async(g)=>{
+  const model=g.scene;
+  const tex=await new THREE.TextureLoader().loadAsync('/svaneti/models/ushba_tex.jpg');
+  tex.flipY=false;tex.colorSpace=THREE.SRGBColorSpace;
+  model.traverse(o=>{if(o.isMesh)o.material=new THREE.MeshStandardMaterial({map:tex,roughness:0.95,metalness:0});});
+  // SAME lean-correction as ar.ts: base->peak -> +Y (upright)
+  model.quaternion.premultiply(new THREE.Quaternion().setFromUnitVectors(
+    new THREE.Vector3(-0.1547,0.9854,-0.0707).normalize(), new THREE.Vector3(0,1,0)));
+  model.updateWorldMatrix(true,true);
+  const box=new THREE.Box3().setFromObject(model);const s=box.getSize(new THREE.Vector3());const c=box.getCenter(new THREE.Vector3());
+  const norm=2/Math.max(s.x,s.y,s.z);
+  model.position.sub(c);model.position.y+=s.y/2;      // base at y=0 (on the floor)
+  const wrap=new THREE.Group();wrap.add(model);wrap.scale.setScalar(norm);scene.add(wrap);
+  // level side camera to judge uprightness
+  cam.position.set(0,1.0,4.2);ctr.target.set(0,1.0,0);ctr.update();
+  info.textContent='upright check: peak should be directly above base, on the grid';
+},undefined,e=>info.textContent='ERR '+e);
+addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();R.setSize(innerWidth,innerHeight);});
+(function loop(){requestAnimationFrame(loop);ctr.update();R.render(scene,cam);})();
+</script></body></html>
