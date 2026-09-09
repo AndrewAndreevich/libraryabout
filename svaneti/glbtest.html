@@ -40,21 +40,23 @@ new GLTFLoader().load('/svaneti/models/ushba.glb',async(g)=>{
     mat.needsUpdate=true;
     const cnt=mesh.geometry.attributes.position.count;const n=Math.max(1,Math.round(TARGET*cnt/totalV));const smp=new MeshSurfaceSampler(mesh).build();
     for(let i=0;i<n;i++){smp.sample(_p);_p.applyMatrix4(m2w);targs.push(_p.x,_p.y,_p.z);if(_p.y<minY)minY=_p.y;if(_p.y>maxY)maxY=_p.y;}}
-  const N=targs.length/3;const targets=new Float32Array(targs);const ny=new Float32Array(N);const pos=new Float32Array(N*3);const col=new Float32Array(N*3);const span=Math.max(1e-6,maxY-minY);
-  for(let i=0;i<N;i++){ny[i]=(targets[i*3+1]-minY)/span;pos[i*3]=targets[i*3];pos[i*3+1]=minY;pos[i*3+2]=targets[i*3+2];}
+  const N=targs.length/3;const targets=new Float32Array(targs);const ny=new Float32Array(N);const jx=new Float32Array(N);const jz=new Float32Array(N);const pos=new Float32Array(N*3);const col=new Float32Array(N*3);const span=Math.max(1e-6,maxY-minY);
+  for(let i=0;i<N;i++){ny[i]=(targets[i*3+1]-minY)/span;jx[i]=(Math.random()-0.5)*span*0.06;jz[i]=(Math.random()-0.5)*span*0.06;pos[i*3]=targets[i*3];pos[i*3+1]=minY;pos[i*3+2]=targets[i*3+2];}
   const pg=new THREE.BufferGeometry();const pa=new THREE.BufferAttribute(pos,3);pa.setUsage(THREE.DynamicDrawUsage);const ca=new THREE.BufferAttribute(col,3);ca.setUsage(THREE.DynamicDrawUsage);
   pg.setAttribute('position',pa);pg.setAttribute('color',ca);
   const pm=new THREE.PointsMaterial({size:span*norm*0.006,vertexColors:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
   const pts=new THREE.Points(pg,pm);pts.frustumCulled=false;wrap.add(pts);
-  fx={uRevealY,pa,ca,targets,ny,minY,maxY,N,base:new THREE.Color(0.7,0.85,1.0),pts};
+  fx={uRevealY,pa,ca,targets,ny,jx,jz,minY,maxY,N,base:new THREE.Color(0.7,0.85,1.0),pts};
   cam.position.set(0,0,Math.max(s.x,s.y,s.z)*norm*1.7);ctr.target.set(0,0,0);ctr.update();
   info.textContent=`OK N=${N} y[${minY.toFixed(1)},${maxY.toFixed(1)}]`;buildStart=performance.now();
 },undefined,e=>info.textContent='ERR '+e);
 function upd(now){if(!fx)return;let t=0.5;// FROZEN mid-build for capture
   if(t>=1){fx.uRevealY.value=1e9;fx.pts.visible=false;return;}fx.pts.visible=true;
   const te=t*t*(3-2*t);const span=fx.maxY-fx.minY;fx.uRevealY.value=fx.minY+span*te;
-  const p=fx.pa.array,co=fx.ca.array,c=fx.base;
-  for(let i=0;i<fx.N;i++){const nyi=fx.ny[i];const lp=sstep(nyi-0.14,nyi+0.02,te);p[i*3+1]=fx.minY+(fx.targets[i*3+1]-fx.minY)*lp;const e=sstep(0,0.15,lp)*(1-sstep(0.82,1,lp));co[i*3]=c.r*e;co[i*3+1]=c.g*e;co[i*3+2]=c.b*e;}
+  const p=fx.pa.array,co=fx.ca.array,c=fx.base;const LEAD=0.18;
+  for(let i=0;i<fx.N;i++){const nyi=fx.ny[i];const lp=Math.min(1,Math.max(0,(te-(nyi-LEAD))/LEAD));const startY=fx.minY+span*(nyi-LEAD);const ty=fx.targets[i*3+1];
+    p[i*3]=fx.targets[i*3]+fx.jx[i]*(1-lp);p[i*3+1]=startY+(ty-startY)*lp;p[i*3+2]=fx.targets[i*3+2]+fx.jz[i]*(1-lp);
+    const e=te<nyi-LEAD?0:sstep(0,0.25,lp)*(1-sstep(0.7,1,lp));co[i*3]=c.r*e;co[i*3+1]=c.g*e;co[i*3+2]=c.b*e;}
   fx.pa.needsUpdate=true;fx.ca.needsUpdate=true;}
 addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();R.setSize(innerWidth,innerHeight);});
 (function loop(){requestAnimationFrame(loop);upd(performance.now());ctr.update();R.render(scene,cam);})();
