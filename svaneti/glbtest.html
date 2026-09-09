@@ -44,7 +44,7 @@ new GLTFLoader().load('/svaneti/models/ushba.glb',async(g)=>{
   for(let i=0;i<N;i++){ny[i]=(targets[i*3+1]-minY)/span;pos[i*3]=targets[i*3];pos[i*3+1]=minY;pos[i*3+2]=targets[i*3+2];}
   const pg=new THREE.BufferGeometry();const pa=new THREE.BufferAttribute(pos,3);pa.setUsage(THREE.DynamicDrawUsage);const ca=new THREE.BufferAttribute(col,3);ca.setUsage(THREE.DynamicDrawUsage);
   pg.setAttribute('position',pa);pg.setAttribute('color',ca);
-  const pm=new THREE.PointsMaterial({size:span*0.014,vertexColors:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+  const pm=new THREE.PointsMaterial({size:span*norm*0.006,vertexColors:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
   const pts=new THREE.Points(pg,pm);pts.frustumCulled=false;wrap.add(pts);
   fx={uRevealY,pa,ca,targets,ny,minY,maxY,N,base:new THREE.Color(0.7,0.85,1.0),pts};
   cam.position.set(0,0,Math.max(s.x,s.y,s.z)*norm*1.7);ctr.target.set(0,0,0);ctr.update();
