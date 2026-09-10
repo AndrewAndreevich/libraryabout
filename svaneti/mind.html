@@ -77,8 +77,8 @@ async function main(){
     // One-Euro-filter smoothing: lower minCF = less jitter when nearly still;
     // high beta keeps it responsive when you actually move. Kills the constant
     // shimmer while the image is held steady.
-    filterMinCF: 0.000004,
-    filterBeta: 1500,
+    filterMinCF: 0.0005,
+    filterBeta: 1000,
   });
   const {renderer, scene, camera}=mindar;
   renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
