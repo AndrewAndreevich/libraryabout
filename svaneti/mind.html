@@ -74,6 +74,11 @@ async function main(){
     container:$('app'),
     imageTargetSrc:'/svaneti/ar/targets.mind',
     uiScanning:false, uiLoading:false, uiError:false,
+    // One-Euro-filter smoothing: lower minCF = less jitter when nearly still;
+    // high beta keeps it responsive when you actually move. Kills the constant
+    // shimmer while the image is held steady.
+    filterMinCF: 0.00008,
+    filterBeta: 1200,
   });
   const {renderer, scene, camera}=mindar;
   renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
