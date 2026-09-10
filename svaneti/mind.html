@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<title>Ushba Mountain AR</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#000}
+  #app{position:fixed;inset:0}
+  .hud{position:fixed;font:12px/1.4 monospace;color:#cfd2dc;background:rgba(20,20,26,.75);
+    border:1px solid #44545a;border-radius:4px;padding:6px 10px;user-select:none;z-index:20;box-sizing:border-box}
+  #arStatus{top:10px;left:10px;right:10px;text-align:center}
+  #arDebug{top:40px;left:10px;right:10px;text-align:center;font-size:10px;color:#ffd479}
+  #arScale{bottom:10px;right:10px;display:flex;align-items:center;gap:6px}
+  #arScale button{width:26px;height:26px;font:14px monospace;color:#cfd2dc;background:rgba(255,255,255,.08);
+    border:1px solid #44545a;border-radius:3px;cursor:pointer}
+  #arRotate{bottom:10px;left:10px;display:flex;flex-direction:column;gap:3px}
+  #arRotate .rsec{color:#ffd479;font-size:10px;margin-top:2px}
+  #arRotate .rrow{display:flex;align-items:center;gap:4px}
+  #arRotate .rrow>span:first-child{width:12px;text-align:center;color:#ffd479}
+  #arRotate .rval,#arRotate .pval{width:46px;text-align:center;color:#cfd2dc;font-weight:bold}
+  #arRotate button{width:24px;height:20px;font:13px monospace;color:#cfd2dc;background:rgba(255,255,255,.08);
+    border:1px solid #44545a;border-radius:3px;cursor:pointer;padding:0;touch-action:none;user-select:none}
+  #arRotate #rotReset,#arRotate #gridToggle{width:auto;padding:2px 6px}
+  #arRotate #gridToggle.on{background:rgba(0,255,204,.25);border-color:#00ffcc}
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+  "mindar-image-three": "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
+}}
+</script>
+</head>
+<body>
+<div id="app"></div>
+<div id="arStatus" class="hud">loading…</div>
+<div id="arDebug" class="hud"></div>
+<div id="arScale" class="hud"><button id="scaleDown">−</button>scale<button id="scaleUp">+</button></div>
+<div id="arRotate" class="hud">
+  <div class="rsec">rotate°</div>
+  <div class="rrow"><span>X</span><button data-ax="x" data-d="-1">−</button><span class="rval" data-rv="x">0°</span><button data-ax="x" data-d="1">+</button></div>
+  <div class="rrow"><span>Y</span><button data-ax="y" data-d="-1">−</button><span class="rval" data-rv="y">0°</span><button data-ax="y" data-d="1">+</button></div>
+  <div class="rrow"><span>Z</span><button data-ax="z" data-d="-1">−</button><span class="rval" data-rv="z">0°</span><button data-ax="z" data-d="1">+</button></div>
+  <div class="rsec">move</div>
+  <div class="rrow"><span>X</span><button data-pax="x" data-pd="-1">−</button><span class="pval" data-pv="x">0</span><button data-pax="x" data-pd="1">+</button></div>
+  <div class="rrow"><span>Y</span><button data-pax="y" data-pd="-1">−</button><span class="pval" data-pv="y">0</span><button data-pax="y" data-pd="1">+</button></div>
+  <div class="rrow"><span>Z</span><button data-pax="z" data-pd="-1">−</button><span class="pval" data-pv="z">0</span><button data-pax="z" data-pd="1">+</button></div>
+  <div class="rrow" style="gap:6px;margin-top:2px"><button id="rotReset">reset</button><button id="gridToggle">grid</button></div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+import { MindARThree } from 'mindar-image-three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const $ = (id)=>document.getElementById(id);
+const statusEl=$('arStatus'), debugEl=$('arDebug'), rotateEl=$('arRotate');
+const setStatus=(m)=>{statusEl.textContent=m;};
+
+// persisted transform
+const ROT_KEY='ushbaMind.rot.v1', POS_KEY='ushbaMind.pos.v1', SCALE_KEY='ushbaMind.scale.v1';
+const load=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k)||'');return v??d;}catch{return d;}};
+let glbRot=load(ROT_KEY,[0,0,0]); let glbPos=load(POS_KEY,[0,0,0]);
+const SCALE_STEPS=[0.05,0.08,0.12,0.18,0.25,0.35,0.5,0.7,1.0,1.4];
+let scaleIdx=(()=>{const s=load(SCALE_KEY,null);const i=s==null?4:SCALE_STEPS.findIndex(x=>Math.abs(x-s)<1e-6);return i>=0?i:4;})();
+const ROT_STEP=Math.PI/90, POS_STEP=0.02;
+
+let wrap=null, stand=null, norm=1;
+const basePos=new THREE.Vector3();
+
+async function main(){
+  const mindar=new MindARThree({
+    container:$('app'),
+    imageTargetSrc:'/svaneti/ar/targets.mind',
+    uiScanning:false, uiLoading:false, uiError:false,
+  });
+  const {renderer, scene, camera}=mindar;
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+  scene.environment=new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(),0.04).texture;
+  scene.add(new THREE.AmbientLight(0xffffff,0.6));
+  const key=new THREE.DirectionalLight(0xffffff,2.0); key.position.set(1,2,3); scene.add(key);
+  const fill=new THREE.DirectionalLight(0xffffff,0.5); fill.position.set(-2,1,-2); scene.add(fill);
+
+  const anchor=mindar.addAnchor(0);
+
+  setStatus('loading model…');
+  const gltf=await new GLTFLoader().loadAsync('/svaneti/models/ushba.glb');
+  const model=gltf.scene;
+  const tex=await new THREE.TextureLoader().loadAsync('/svaneti/models/ushba_tex.jpg');
+  tex.flipY=false; tex.colorSpace=THREE.SRGBColorSpace; tex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+  model.traverse(o=>{ if(o.isMesh) o.material=new THREE.MeshStandardMaterial({map:tex,roughness:0.95,metalness:0}); });
+  // scan lean-correction: base->peak -> +Y
+  model.quaternion.premultiply(new THREE.Quaternion().setFromUnitVectors(
+    new THREE.Vector3(-0.1547,0.9854,-0.0707).normalize(), new THREE.Vector3(0,1,0)));
+  model.updateWorldMatrix(true,true);
+  const box=new THREE.Box3().setFromObject(model); const size=box.getSize(new THREE.Vector3()); const center=box.getCenter(new THREE.Vector3());
+  norm=0.7/Math.max(size.x,size.y,size.z);
+  model.position.sub(center); model.position.y+=size.y/2;          // base at origin, up=+Y
+
+  wrap=new THREE.Group(); wrap.add(model);
+  // grid = model base plane (X-Z), child of wrap
+  const gridSize=Math.max(size.x,size.z)*1.1;
+  const grid=new THREE.GridHelper(gridSize,12,0x00ffcc,0x2f6f63);
+  (Array.isArray(grid.material)?grid.material:[grid.material]).forEach(m=>{m.transparent=true;m.opacity=0.7;});
+  const gridGroup=new THREE.Group(); gridGroup.add(grid); gridGroup.add(new THREE.AxesHelper(gridSize*0.55));
+  gridGroup.visible=false; wrap.add(gridGroup);
+
+  // stand: MindAR image lies in X-Y plane, +Z out of image → to stand the model
+  // up out of the image, map its up(+Y) onto +Z. (Flip sign via buttons if needed.)
+  stand=new THREE.Group(); stand.rotation.x=Math.PI/2; stand.add(wrap);
+  anchor.group.add(stand);
+
+  applyAll();
+  wireButtons(gridGroup);
+
+  anchor.onTargetFound=()=>{ setStatus('tracking'); };
+  anchor.onTargetLost =()=>{ setStatus('point the camera at the image'); };
+
+  setStatus('starting camera…');
+  try{ await mindar.start(); }
+  catch(e){ setStatus('camera error: '+(e&&e.message||e)); return; }
+  setStatus('point the camera at the image');
+  renderer.setAnimationLoop(()=>{
+    const v=anchor.group.visible;
+    debugEl.textContent=`${v?'FOUND':'—'}  scale ${SCALE_STEPS[scaleIdx].toFixed(2)} | rot ${degs(glbRot)} | pos ${poss(glbPos)}`;
+    renderer.render(scene,camera);
+  });
+}
+
+function applyAll(){
+  if(!wrap) return;
+  wrap.rotation.set(glbRot[0],glbRot[1],glbRot[2]);
+  wrap.position.set(basePos.x+glbPos[0],basePos.y+glbPos[1],basePos.z+glbPos[2]);
+  wrap.scale.setScalar(norm*SCALE_STEPS[scaleIdx]);
+  localStorage.setItem(ROT_KEY,JSON.stringify(glbRot));
+  localStorage.setItem(POS_KEY,JSON.stringify(glbPos));
+  localStorage.setItem(SCALE_KEY,JSON.stringify(SCALE_STEPS[scaleIdx]));
+  rotateEl.querySelectorAll('.rval').forEach(el=>{const i=el.dataset.rv==='x'?0:el.dataset.rv==='y'?1:2;el.textContent=(((Math.round(THREE.MathUtils.radToDeg(glbRot[i]))%360)+360)%360)+'°';});
+  rotateEl.querySelectorAll('.pval').forEach(el=>{const i=el.dataset.pv==='x'?0:el.dataset.pv==='y'?1:2;el.textContent=glbPos[i].toFixed(2);});
+}
+const degs=(r)=>r.map(x=>((Math.round(THREE.MathUtils.radToDeg(x))%360)+360)%360).join(',');
+const poss=(p)=>p.map(x=>x.toFixed(2)).join(',');
+
+function bindRepeat(btn,step){let t;const stop=()=>{if(t){clearTimeout(t);t=undefined;}};
+  btn.addEventListener('pointerdown',e=>{e.preventDefault();step();let n=0;const tick=()=>{step();n++;t=setTimeout(tick,n>10?35:n>4?70:140);};t=setTimeout(tick,350);});
+  ['pointerup','pointerleave','pointercancel'].forEach(ev=>btn.addEventListener(ev,stop));}
+function wireButtons(gridGroup){
+  rotateEl.querySelectorAll('button[data-ax]').forEach(b=>{const i=b.dataset.ax==='x'?0:b.dataset.ax==='y'?1:2;const d=+b.dataset.d;bindRepeat(b,()=>{glbRot[i]+=d*ROT_STEP;applyAll();});});
+  rotateEl.querySelectorAll('button[data-pax]').forEach(b=>{const i=b.dataset.pax==='x'?0:b.dataset.pax==='y'?1:2;const d=+b.dataset.pd;bindRepeat(b,()=>{glbPos[i]+=d*POS_STEP;applyAll();});});
+  $('rotReset').addEventListener('click',()=>{glbRot=[0,0,0];glbPos=[0,0,0];applyAll();});
+  $('gridToggle').addEventListener('click',()=>{gridGroup.visible=!gridGroup.visible;$('gridToggle').classList.toggle('on',gridGroup.visible);});
+  $('scaleUp').addEventListener('click',()=>{scaleIdx=Math.min(SCALE_STEPS.length-1,scaleIdx+1);applyAll();});
+  $('scaleDown').addEventListener('click',()=>{scaleIdx=Math.max(0,scaleIdx-1);applyAll();});
+}
+
+main().catch(e=>{ setStatus('failed: '+(e&&e.stack||e)); });
+</script>
+</body>
+</html>
