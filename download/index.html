@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workstation Client</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Noto+Sans+Georgian:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#ffffff; --panel:#f6f7f9; --line:#e6e8ec; --ink:#0c0d0e; --muted:#6b7280; --hover:#111; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font-family:"Inter","Noto Sans Georgian",-apple-system,Segoe UI,Roboto,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh; }
+  .wrap { max-width:760px; margin:0 auto; padding:80px 24px 64px; transition:opacity .22s ease; }
+  .wrap.fading { opacity:0; }
+  .logo { display:flex; align-items:center; gap:13px; }
+  .dots { width:30px; height:30px; }
+  .word { font-family:"Space Grotesk","Noto Sans Georgian",sans-serif; font-size:18px; font-weight:600; letter-spacing:-.01em; }
+  h1 { font-family:"Space Grotesk","Noto Sans Georgian",sans-serif; font-size:44px; line-height:1.08; font-weight:600; letter-spacing:-.025em; margin:28px 0 12px; }
+  .sub { color:var(--ink); font-size:18px; line-height:1.55; max-width:640px; font-weight:500; }
+  .desc { margin-top:14px; color:var(--muted); font-size:15px; line-height:1.7; max-width:640px; }
+  h2 { font-family:"Space Grotesk","Noto Sans Georgian",sans-serif; font-size:12px; letter-spacing:.16em; color:var(--muted); margin:46px 0 16px; font-weight:600; }
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:13px; }
+  @media (max-width:560px) { .grid { grid-template-columns:repeat(2,1fr); } }
+  .btn { display:flex; flex-direction:column; justify-content:center; gap:6px;
+         padding:18px; min-height:80px; border-radius:15px; border:1px solid var(--line);
+         background:var(--panel); color:var(--ink); text-decoration:none; transition:.15s ease; }
+  .btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.06); }
+  .btn.soon { opacity:.5; cursor:default; }
+  .btn.soon:hover { transform:none; border-color:var(--line); box-shadow:none; }
+  .os { font-size:15.5px; font-weight:600; }
+  .meta { font-size:11.5px; color:var(--muted); }
+  .badge { font-weight:700; letter-spacing:.06em; font-size:10.5px; color:var(--muted); }
+  .foot { margin-top:52px; color:var(--muted); font-size:12.5px; }
+  .foot code { background:var(--panel); border:1px solid var(--line); padding:2px 7px; border-radius:6px; color:#3b4049; }
+  .lang { position:fixed; top:20px; right:22px; z-index:50; display:flex; background:var(--panel);
+          border:1px solid var(--line); border-radius:999px; padding:3px; }
+  .lang button { border:none; background:transparent; cursor:pointer; font-size:12.5px; font-weight:600;
+          color:var(--muted); padding:6px 13px; border-radius:999px; transition:.18s ease;
+          font-family:"Space Grotesk","Noto Sans Georgian",sans-serif; }
+  .lang button.active { background:var(--ink); color:#fff; }
+</style>
+</head>
+<body>
+  <div class="lang">
+    <button data-lang="en">EN</button>
+    <button data-lang="ka">ქარ</button>
+  </div>
+
+  <div class="wrap" id="wrap">
+    <div class="logo">
+      <svg class="dots" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="4.6" r="2.5" fill="#0c0d0e"/><circle cx="19.4" cy="12" r="2.5" fill="#0c0d0e"/><circle cx="12" cy="19.4" r="2.5" fill="#0c0d0e"/><circle cx="4.6" cy="12" r="2.5" fill="#0c0d0e"/></svg>
+      <span class="word">Library About</span>
+    </div>
+
+    <h1 data-i18n="h1">Workstation Client</h1>
+    <p class="sub" data-i18n="sub">A community application — an open foundation of technological tools that helps the community shape, develop, and bring to life complex ideas and theories.</p>
+    <p class="desc" data-i18n="desc">The desktop client connects each workstation to the platform, runs AI-assistant sessions, and is coordinated from one shared dashboard.</p>
+
+    <h2 data-i18n="download">DOWNLOAD</h2>
+    <div class="grid">
+      <a class="btn" id="win-dl" href="https://pvfassets.fra1.cdn.digitaloceanspaces.com/library_about_desktop_client/LibraryAbout-Setup.exe">
+        <span class="os">Windows</span><span class="meta" id="win-meta">Installer (.exe) · 64-bit</span>
+      </a>
+      <span class="btn soon"><span class="os">macOS</span><span class="badge" data-i18n="coming">COMING SOON</span></span>
+      <span class="btn soon"><span class="os">Linux</span><span class="badge" data-i18n="coming">COMING SOON</span></span>
+      <span class="btn soon"><span class="os">iPhone</span><span class="badge" data-i18n="coming">COMING SOON</span></span>
+      <span class="btn soon"><span class="os">Android</span><span class="badge" data-i18n="coming">COMING SOON</span></span>
+      <span class="btn soon"><span class="os">Meta Quest</span><span class="badge" data-i18n="coming">COMING SOON</span></span>
+    </div>
+
+    <p class="foot"><span data-i18n="foot">Windows builds auto-update from the platform server. After install, the app guides you through setting up Claude on the station.</span></p>
+    <p class="foot" style="margin-top:12px"><span data-i18n="repair">Update stuck, or the app won't close?</span> <a href="https://pvfassets.fra1.cdn.digitaloceanspaces.com/library_about_desktop_client/fix-stuck.bat" style="color:var(--ink);font-weight:600" data-i18n="repairlink">Download the repair tool</a> <span data-i18n="repair2">and run it as administrator (right-click → Run as administrator), then reinstall.</span></p>
+  </div>
+
+  <script>
+    var I18N = {
+      en: {
+        h1: "Workstation Client",
+        sub: "A community application — an open foundation of technological tools that helps the community shape, develop, and bring to life complex ideas and theories.",
+        desc: "The desktop client connects each workstation to the platform, runs AI-assistant sessions, and is coordinated from one shared dashboard.",
+        download: "DOWNLOAD",
+        coming: "COMING SOON",
+        foot: "Windows builds auto-update from the platform server. After install, the app guides you through setting up Claude on the station.",
+        installer: "Installer (.exe)",
+        repair: "Update stuck, or the app won't close?",
+        repairlink: "Download the repair tool",
+        repair2: "and run it as administrator (right-click → Run as administrator), then reinstall."
+      },
+      ka: {
+        h1: "სამუშაო სადგურის კლიენტი",
+        sub: "სათემო აპლიკაცია — ტექნოლოგიური ხელსაწყოების ღია საფუძველი, რომელიც თემს ეხმარება ჩამოაყალიბოს, განავითაროს და განახორციელოს რთული იდეები და თეორიები.",
+        desc: "დესკტოპ კლიენტი თითოეულ სამუშაო სადგურს უკავშირებს პლატფორმას, უშვებს AI-ასისტენტის სესიებს და იმართება ერთიანი საერთო პანელიდან.",
+        download: "ჩამოტვირთვა",
+        coming: "მალე",
+        foot: "Windows-ვერსიები ავტომატურად ნახლდება პლატფორმის სერვერიდან. ინსტალაციის შემდეგ აპლიკაცია დაგეხმარებათ Claude-ის გამართვაში სადგურზე.",
+        installer: "ინსტალერი (.exe)",
+        repair: "განახლება გაიჭედა ან აპლიკაცია არ იხურება?",
+        repairlink: "ჩამოტვირთეთ აღდგენის ხელსაწყო",
+        repair2: "და გაუშვით ადმინისტრატორის უფლებით (მარჯვენა კლიკი → Run as administrator), შემდეგ თავიდან დააინსტალირეთ."
+      }
+    };
+
+    var winData = { ver: null, size: null };
+    var lang = localStorage.getItem("lang") || "en";
+
+    function renderWinMeta() {
+      var NB = String.fromCharCode(160);
+      var parts = [I18N[lang].installer, "64-bit"];
+      if (winData.ver) parts.push("v" + winData.ver);
+      if (winData.size) parts.push((winData.size / 1048576).toFixed(0) + NB + "MB");
+      document.getElementById("win-meta").textContent = parts.join(" · ");
+    }
+
+    function applyLang(l) {
+      lang = l;
+      document.documentElement.setAttribute("lang", l);
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var k = el.getAttribute("data-i18n");
+        if (I18N[l][k] != null) el.textContent = I18N[l][k];
+      });
+      renderWinMeta();
+      document.querySelectorAll(".lang button").forEach(function (b) {
+        b.classList.toggle("active", b.getAttribute("data-lang") === l);
+      });
+    }
+
+    function switchLang(l) {
+      if (l === lang) return;
+      var wrap = document.getElementById("wrap");
+      wrap.classList.add("fading");
+      setTimeout(function () {
+        applyLang(l);
+        localStorage.setItem("lang", l);
+        wrap.classList.remove("fading");
+      }, 220);
+    }
+
+    document.querySelectorAll(".lang button").forEach(function (b) {
+      b.addEventListener("click", function () { switchLang(b.getAttribute("data-lang")); });
+    });
+
+    applyLang(lang);
+
+    // Version label only — read the CDN's current manifest (the droplet's local
+    // /updates/latest.yml can lag). The download link stays the stable
+    // LibraryAbout-Setup.exe copy (always the latest, always present), so it never
+    // 404s on a pruned versioned filename.
+    fetch("https://pvfassets.fra1.cdn.digitaloceanspaces.com/library_about_desktop_client/latest.yml", { cache: "no-store" }).then(function (r) { return r.text(); }).then(function (t) {
+      var ver = (t.match(/^version:\s*(.+)$/m) || [])[1];
+      var size = parseInt((t.match(/size:\s*(\d+)/) || [])[1], 10);
+      winData.ver = ver ? ver.trim() : null;
+      winData.size = size || null;
+      renderWinMeta();
+    }).catch(function () {});
+  </script>
+</body>
+</html>

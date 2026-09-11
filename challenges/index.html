@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Community Challenges — Library About</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#fff; --panel:#f6f7f9; --line:#e6e8ec; --ink:#0c0d0e; --muted:#6b7280; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:"Inter",-apple-system,Segoe UI,Roboto,sans-serif; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:760px; margin:0 auto; padding:54px 22px 70px; }
+  .logo { display:flex; align-items:center; gap:12px; }
+  .dots { width:28px; height:28px; }
+  .word { font-family:"Space Grotesk",sans-serif; font-size:16px; font-weight:600; }
+  h1 { font-family:"Space Grotesk",sans-serif; font-size:34px; font-weight:600; letter-spacing:-.02em; margin:26px 0 8px; }
+  .sub { color:var(--muted); font-size:15.5px; line-height:1.6; max-width:600px; }
+  h2 { font-family:"Space Grotesk",sans-serif; font-size:12px; letter-spacing:.15em; color:var(--muted); margin:42px 0 14px; font-weight:600; }
+  label { display:block; font-size:11.5px; color:var(--muted); margin:0 0 5px; }
+  input, textarea { width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:11px; background:var(--panel); color:var(--ink); font-family:inherit; font-size:14px; resize:vertical; }
+  input:focus, textarea:focus { outline:none; border-color:var(--ink); }
+  .field { margin-bottom:13px; }
+  .btn { padding:11px 18px; border-radius:11px; border:none; background:var(--ink); color:#fff; font-size:13.5px; font-weight:600; cursor:pointer; font-family:inherit; }
+  .btn.ghost { background:var(--panel); color:var(--ink); border:1px solid var(--line); }
+  .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .msg { font-size:12.5px; margin-top:10px; min-height:16px; color:var(--muted); }
+  .card { display:flex; gap:14px; align-items:flex-start; padding:15px 16px; border:1px solid var(--line); background:var(--panel); border-radius:13px; margin-bottom:10px; }
+  .vote { flex:none; display:flex; flex-direction:column; align-items:center; gap:3px; min-width:54px; }
+  .vbtn { width:40px; height:40px; border-radius:10px; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:16px; line-height:1; }
+  .vbtn:hover { border-color:var(--ink); }
+  .vcount { font-family:"JetBrains Mono",monospace; font-size:13px; font-weight:600; }
+  .ctitle { font-size:15px; font-weight:600; }
+  .cprob { font-size:13px; color:#3b4049; margin-top:3px; line-height:1.5; }
+  .tags { margin-top:7px; display:flex; gap:6px; flex-wrap:wrap; }
+  .tag { font-size:10.5px; color:var(--muted); background:#fff; border:1px solid var(--line); padding:2px 8px; border-radius:6px; }
+  .ev { padding:14px 16px; border:1px solid var(--line); border-radius:13px; margin-bottom:10px; }
+  .pill { font-size:10px; font-weight:700; letter-spacing:.05em; padding:2px 8px; border-radius:6px; background:var(--ink); color:#fff; }
+  .seg { display:inline-flex; border:1px solid var(--line); border-radius:9px; overflow:hidden; }
+  .seg button { border:none; background:#fff; padding:6px 13px; font-size:12.5px; cursor:pointer; font-family:inherit; color:var(--muted); }
+  .seg button.on { background:var(--ink); color:#fff; }
+  .foot { margin-top:46px; font-size:12px; color:var(--muted); }
+  a { color:var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="logo" href="/" style="text-decoration:none;color:inherit">
+    <svg class="dots" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="4.6" r="2.5" fill="#0c0d0e"/><circle cx="19.4" cy="12" r="2.5" fill="#0c0d0e"/><circle cx="12" cy="19.4" r="2.5" fill="#0c0d0e"/><circle cx="4.6" cy="12" r="2.5" fill="#0c0d0e"/></svg>
+    <span class="word">Library About</span>
+  </a>
+
+  <h1>Community Challenges</h1>
+  <p class="sub">Submit a problem or research question that matters to the community, with the services or solutions you imagine for it. The community votes; the top topics become public hackathon events — and the solutions get built and shared. Submissions are anonymous.</p>
+
+  <h2>SUBMIT A TOPIC</h2>
+  <div class="field"><label>Title</label><input id="f-title" maxlength="160" placeholder="Short, clear title"></div>
+  <div class="field"><label>The problem / question</label><textarea id="f-problem" rows="3" maxlength="4000" placeholder="What's the problem or research question?"></textarea></div>
+  <div class="field"><label>Why it matters to the community</label><textarea id="f-why" rows="2" maxlength="2000" placeholder="Optional"></textarea></div>
+  <div class="field"><label>Proposed services / solutions (one per line)</label><textarea id="f-sol" rows="3" placeholder="Optional — ideas you'd build for this"></textarea></div>
+  <div class="field"><label>Tags (comma-separated)</label><input id="f-tags" placeholder="e.g. mobility, data, sound"></div>
+  <div class="row"><button class="btn" id="f-submit">Submit topic</button><span class="msg" id="f-msg"></span></div>
+
+  <h2 style="display:flex;align-items:center;gap:12px;justify-content:space-between">TOPICS
+    <span class="seg"><button id="s-top" class="on">Top</button><button id="s-new">New</button></span>
+  </h2>
+  <div id="list"><div class="msg">Loading…</div></div>
+
+  <h2>EVENTS</h2>
+  <div id="events"><div class="msg">Loading…</div></div>
+
+  <p class="foot"><a href="/">← Library About</a> · <a href="/download">Download the client</a></p>
+</div>
+
+<script>
+  var API = "/api/challenges";
+  var tok = localStorage.getItem("la_anon");
+  if (!tok) { tok = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2)); localStorage.setItem("la_anon", tok); }
+  var voted = JSON.parse(localStorage.getItem("la_voted") || "{}");
+  var sort = "top";
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); };
+
+  function api(path, opts) {
+    opts = opts || {};
+    opts.headers = Object.assign({ "content-type": "application/json", "x-anon-token": tok }, opts.headers || {});
+    return fetch(API + path, opts).then(function (r) { return r.json().catch(function () { return {}; }); });
+  }
+
+  function loadTopics() {
+    var listEl = document.getElementById("list");
+    api("/topics?sort=" + sort).then(function (items) {
+      if (!Array.isArray(items) || !items.length) { listEl.innerHTML = '<div class="msg">No topics yet — be the first.</div>'; return; }
+      listEl.innerHTML = items.map(function (t) {
+        var did = voted[t.id];
+        return '<div class="card"><div class="vote"><button class="vbtn" data-vote="' + esc(t.id) + '"' + (did ? " disabled" : "") + '>▲</button><span class="vcount">' + t.votes + '</span></div>' +
+          '<div><div class="ctitle">' + esc(t.title) + '</div><div class="cprob">' + esc(t.problem) + '</div>' +
+          (t.tags && t.tags.length ? '<div class="tags">' + t.tags.map(function (x) { return '<span class="tag">' + esc(x) + "</span>"; }).join("") + "</div>" : "") +
+          "</div></div>";
+      }).join("");
+      listEl.querySelectorAll("button[data-vote]").forEach(function (b) {
+        b.onclick = function () {
+          var id = b.dataset.vote;
+          api("/topics/" + id + "/vote", { method: "POST" }).then(function (r) {
+            voted[id] = true; localStorage.setItem("la_voted", JSON.stringify(voted)); loadTopics();
+          });
+        };
+      });
+    });
+  }
+
+  function loadEvents() {
+    var el = document.getElementById("events");
+    api("/events").then(function (items) {
+      if (!Array.isArray(items) || !items.length) { el.innerHTML = '<div class="msg">No events yet.</div>'; return; }
+      el.innerHTML = items.map(function (e) {
+        return '<div class="ev"><div style="display:flex;align-items:center;gap:9px"><span style="font-size:14.5px;font-weight:600">' + esc(e.title) + '</span><span class="pill">' + esc(e.status) + '</span></div>' +
+          '<div class="cprob">' + esc(e.format) + (e.location ? " · " + esc(e.location) : "") + "</div></div>";
+      }).join("");
+    });
+  }
+
+  document.getElementById("f-submit").onclick = function () {
+    var msg = document.getElementById("f-msg");
+    var title = document.getElementById("f-title").value.trim();
+    var problem = document.getElementById("f-problem").value.trim();
+    if (!title || !problem) { msg.style.color = "#d9534f"; msg.textContent = "Title and problem are required."; return; }
+    msg.style.color = "var(--muted)"; msg.textContent = "Submitting…";
+    api("/topics", {
+      method: "POST",
+      body: JSON.stringify({
+        title: title, problem: problem,
+        why_it_matters: document.getElementById("f-why").value.trim(),
+        proposed_solutions: document.getElementById("f-sol").value.split("\n").map(function (s) { return s.trim(); }).filter(Boolean),
+        tags: document.getElementById("f-tags").value.split(",").map(function (s) { return s.trim(); }).filter(Boolean)
+      })
+    }).then(function (r) {
+      if (r && r.id) {
+        msg.style.color = "#3fae6f"; msg.textContent = "Submitted — thank you.";
+        ["f-title", "f-problem", "f-why", "f-sol", "f-tags"].forEach(function (i) { document.getElementById(i).value = ""; });
+        sort = "new"; document.getElementById("s-new").classList.add("on"); document.getElementById("s-top").classList.remove("on");
+        loadTopics();
+      } else { msg.style.color = "#d9534f"; msg.textContent = "Error: " + ((r && r.error) || "could not submit"); }
+    });
+  };
+
+  document.getElementById("s-top").onclick = function () { sort = "top"; this.classList.add("on"); document.getElementById("s-new").classList.remove("on"); loadTopics(); };
+  document.getElementById("s-new").onclick = function () { sort = "new"; this.classList.add("on"); document.getElementById("s-top").classList.remove("on"); loadTopics(); };
+
+  loadTopics(); loadEvents();
+</script>
+</body>
+</html>
