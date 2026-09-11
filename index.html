@@ -1,19 +1,283 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>libraryabout.com</title>
-    <meta http-equiv="refresh" content="0; url=/svaneti/" />
-    <link rel="canonical" href="/svaneti/" />
-    <style>
-      html, body { margin: 0; height: 100%; background: #14141a; color: #cfd2dc;
-        font: 15px/1.6 system-ui, sans-serif; display: grid; place-items: center; }
-      a { color: #ffd479; }
-    </style>
-  </head>
-  <body>
-    <p>Redirecting to <a href="/svaneti/">libraryabout.com/svaneti</a>…</p>
-    <script>location.replace('/svaneti/');</script>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Svaneti — A digital archive of a living region · Library About</title>
+<meta name="description" content="A photorealistic, interactive twin of Svaneti — flown, walked and rebuilt, mission by mission. A Library About special project.">
+<link rel="canonical" href="https://libraryabout.com/svaneti/">
+<meta property="og:title" content="Svaneti — A digital archive of a living region">
+<meta property="og:description" content="A photorealistic, interactive twin of Svaneti — flown, walked and rebuilt, mission by mission.">
+<meta property="og:url" content="https://libraryabout.com/svaneti/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Type system: Gloock's stone-carved high-contrast serif for record titles, Hanken Grotesk as the quiet field-notes body, Martian Mono as the surveyor's instrument face for coordinates and captions. -->
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Hanken+Grotesk:wght@400;500;700&family=Martian+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* Palette — Svan materials: slate #22262A, limestone plaster #EDECE8, weathered stone #70767A, glacial ice #A9CBD4 */
+  html, body { margin: 0; padding: 0; background: #22262A; }
+  body { font-family: 'Hanken Grotesk', sans-serif; color: #EDECE8; -webkit-font-smoothing: antialiased; }
+  a { color: #EDECE8; text-decoration-color: #A9CBD4; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  a:hover { color: #A9CBD4; text-decoration-color: #A9CBD4; }
+  :focus-visible { outline: 2px solid #A9CBD4; outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- HERO · text lower-left · scene: drifting ridgelines (approved) -->
+<header data-screen-label="Hero" data-media="" style="position: relative; height: 100svh; min-height: 560px; background: #22262A; overflow: hidden;">
+  <div data-media-inner="" style="position: absolute; inset: -4%; will-change: transform;">
+    <!-- <video autoplay muted loop playsinline poster="posters/00-hero.jpg" src="loops/00-hero-flight.mp4" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video> -->
+    <canvas data-scanfield="ridge" style="position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+  </div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(20,23,26,0.72), rgba(20,23,26,0.24) 40%, transparent 62%);"></div>
+  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; text-align: left; max-width: 1360px; margin: 0 auto; padding: clamp(24px, 4vw, 64px);">
+    <div style="display: flex; flex-wrap: wrap; gap: 10px 24px; font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #A9CBD4;">
+      <span style="color: #EDECE8; font-weight: 600;">LIBRARY ABOUT</span>
+      <span>ARCHIVE № SVN</span>
+      <span>GEORGIA · GREATER CAUCASUS</span>
+      <span>105 × 55 KM</span>
+    </div>
+    <h1 style="font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(42px, 8.6vw, 118px); line-height: 1.0; letter-spacing: -0.01em; margin: clamp(18px, 3vh, 40px) 0 0 0; max-width: 12ch; text-wrap: balance;">A digital archive of a living region</h1>
+    <p style="font-size: clamp(17px, 2vw, 21px); line-height: 1.5; max-width: 44ch; margin: clamp(16px, 2.5vh, 28px) 0 clamp(24px, 4.5vh, 48px) 0; color: rgba(237,236,232,0.85);">A photorealistic, interactive twin of Svaneti — flown, walked and rebuilt, mission by mission.</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px 40px; font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: rgba(237,236,232,0.55);">
+      <span>FORMAT — INTERACTIVE TWIN</span>
+      <span>DEVICE — MOBILE · VR HEADSET</span>
+      <span>STATUS — FIELD SEASON 2026</span>
+    </div>
+  </div>
+</header>
+
+<!-- RECORD 01 · text lower-right · scene: orbiting village point cloud (approved) -->
+<section data-screen-label="Record 01" data-media="" style="position: relative; height: 100svh; min-height: 560px; background: #22262A; overflow: hidden;">
+  <div data-media-inner="" style="position: absolute; inset: -4%; will-change: transform;">
+    <!-- <video autoplay muted loop playsinline poster="posters/01.jpg" src="loops/01-showreel-orbit.mp4" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video> -->
+    <canvas data-scanfield="orbit" style="position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+  </div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(20,23,26,0.72), rgba(20,23,26,0.24) 40%, transparent 62%);"></div>
+  <div style="position: absolute; top: 20px; left: clamp(24px, 4vw, 64px); font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgba(169,203,212,0.7);">SVN / 01 · SILENT LOOP<br>SHOWREEL — ORBIT TO A VILLAGE STREET</div>
+  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; text-align: right; max-width: 1360px; margin: 0 auto; padding: clamp(24px, 4vw, 64px);">
+    <div style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #A9CBD4; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px 24px;"><span style="color: #EDECE8; font-weight: 600;">RECORD 01</span><span>THE PLACE ITSELF, EXPLORABLE</span></div>
+    <h2 style="font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(30px, 4.6vw, 56px); line-height: 1.06; margin: clamp(14px, 2vh, 24px) 0 0 0; max-width: 18ch; text-wrap: balance;">An archive you can stand inside.</h2>
+    <p style="font-size: clamp(16px, 1.6vw, 18px); line-height: 1.6; margin: clamp(14px, 2vh, 22px) 0 0 0; max-width: 44ch; color: rgba(237,236,232,0.85);">Library About collects knowledge about places. This special project is our answer to what a 3D archive should be: not photographs of a place — the place itself, whole and explorable. Svaneti is where we prove the method.</p>
+  </div>
+</section>
+
+<!-- RECORD 02 · text upper-left · scene: luminous icon plaque on a hill -->
+<section data-screen-label="Record 02" data-media="" style="position: relative; height: 100svh; min-height: 560px; background: #22262A; overflow: hidden;">
+  <div data-media-inner="" style="position: absolute; inset: -4%; will-change: transform;">
+    <!-- <video autoplay muted loop playsinline poster="posters/02.jpg" src="loops/02-ushguli-orbit.mp4" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video> -->
+    <canvas data-scanfield="icon" style="position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+  </div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(20,23,26,0.72), rgba(20,23,26,0.24) 40%, transparent 62%);"></div>
+  <div style="position: absolute; bottom: 20px; right: clamp(24px, 4vw, 64px); font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgba(169,203,212,0.7); text-align: right;">SVN / 02 · SILENT LOOP<br>SCAN ORBIT OF USHGULI TOWERS, UNESCO</div>
+  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; text-align: left; max-width: 1360px; margin: 0 auto; padding: clamp(24px, 4vw, 64px);">
+    <div style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #A9CBD4; display: flex; flex-wrap: wrap; gap: 8px 24px;"><span style="color: #EDECE8; font-weight: 600;">RECORD 02</span><span>HERITAGE KEPT BY MOUNTAINS</span></div>
+    <h2 style="font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(30px, 4.6vw, 56px); line-height: 1.06; margin: clamp(14px, 2vh, 24px) 0 0 0; max-width: 18ch; text-wrap: balance;">The vault of the Caucasus.</h2>
+    <p style="font-size: clamp(16px, 1.6vw, 18px); line-height: 1.6; margin: clamp(14px, 2vh, 22px) 0 0 0; max-width: 44ch; color: rgba(237,236,232,0.85);">Breathtaking and barely reachable — a challenge for us, and a wall for every invader. For centuries, treasures from all of Georgia were carried up here for safekeeping: the Svans knew how to guard heritage, and the mountains did the rest. We continue what the ancestors did — preserving this heritage in the digital age, with methods of our own.</p>
+  </div>
+</section>
+
+<!-- RECORD 03 · text upper-right · scene: rippling wall of headsets -->
+<section data-screen-label="Record 03" data-media="" style="position: relative; height: 100svh; min-height: 560px; background: #22262A; overflow: hidden;">
+  <div data-media-inner="" style="position: absolute; inset: -4%; will-change: transform;">
+    <!-- <video autoplay muted loop playsinline poster="posters/03.jpg" src="loops/03-phone-headset.mp4" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video> -->
+    <canvas data-scanfield="devices" style="position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+  </div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(20,23,26,0.72), rgba(20,23,26,0.24) 40%, transparent 62%);"></div>
+  <div style="position: absolute; bottom: 20px; left: clamp(24px, 4vw, 64px); font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgba(169,203,212,0.7);">SVN / 03 · SILENT LOOP<br>THE SAME VALLEY ON A PHONE AND IN A HEADSET</div>
+  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-end; text-align: right; max-width: 1360px; margin: 0 auto; padding: clamp(24px, 4vw, 64px);">
+    <div style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #A9CBD4; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px 24px;"><span style="color: #EDECE8; font-weight: 600;">RECORD 03</span><span>FULL FIDELITY ON PHONE AND HEADSET</span></div>
+    <h2 style="font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(30px, 4.6vw, 56px); line-height: 1.06; margin: clamp(14px, 2vh, 24px) 0 0 0; max-width: 18ch; text-wrap: balance;">Full quality, in your hands.</h2>
+    <p style="font-size: clamp(16px, 1.6vw, 18px); line-height: 1.6; margin: clamp(14px, 2vh, 22px) 0 0 0; max-width: 44ch; color: rgba(237,236,232,0.85);">The archive runs at full fidelity on a phone and on a standalone VR headset — not a half-working web viewer with a compressed picture. Fitting a photoreal region into mobile hardware is the hard problem. It's also the one worth solving.</p>
+  </div>
+</section>
+
+<!-- RECORD 04 — no media; the quietest spread: limestone paper -->
+<section data-screen-label="Record 04" style="background: #EDECE8; color: #24282C;">
+  <div style="max-width: 1360px; margin: 0 auto; padding: clamp(72px, 14vh, 160px) clamp(24px, 4vw, 64px);">
+    <div style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #70767A;">RECORD 04 · POSITION</div>
+    <h2 style="font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(32px, 5vw, 64px); line-height: 1.06; margin: clamp(16px, 2.5vh, 28px) 0 clamp(48px, 8vh, 88px) 0; max-width: 16ch; text-wrap: balance;">Not a map. Not a game. A third thing.</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: clamp(36px, 5vw, 72px);">
+      <div>
+        <h3 style="font-weight: 700; font-size: 18px; margin: 0 0 12px 0;">Game-level quality</h3>
+        <p style="font-size: 15px; line-height: 1.65; margin: 0; color: #4A5054;">City twins optimize for accuracy; the picture is incidental. Our bar is an open-world game — a twin you want to be in.</p>
+      </div>
+      <div>
+        <h3 style="font-weight: 700; font-size: 18px; margin: 0 0 12px 0;">On mobile hardware</h3>
+        <p style="font-size: 15px; line-height: 1.65; margin: 0; color: #4A5054;">The industry renders beauty on desktop GPUs, or streams dry maps anywhere. We work in the empty intersection.</p>
+      </div>
+      <div>
+        <h3 style="font-weight: 700; font-size: 18px; margin: 0 0 12px 0;">The subject is beauty</h3>
+        <p style="font-size: 15px; line-height: 1.65; margin: 0; color: #4A5054;">Not pipes and planning: architecture, history and landscape as value in themselves.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECORD 05 · text lower-left · scene: Svaneti boundary map, path traversing, tiles materializing (scroll-driven) -->
+<section data-screen-label="Record 05" data-media="" style="position: relative; height: 100svh; min-height: 560px; background: #22262A; overflow: hidden;">
+  <div data-media-inner="" style="position: absolute; inset: -4%; will-change: transform;">
+    <!-- <video autoplay muted loop playsinline poster="posters/05.jpg" src="loops/05-mission-planner.mp4" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video> -->
+    <canvas data-scanfield="missions" style="position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+  </div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(20,23,26,0.72), rgba(20,23,26,0.24) 40%, transparent 62%);"></div>
+  <div style="position: absolute; top: 20px; right: clamp(24px, 4vw, 64px); font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgba(169,203,212,0.7); text-align: right;">SVN / 05 · SILENT LOOP<br>MISSION PLANNER — PLAN → TRACK → SCAN</div>
+  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; text-align: left; max-width: 1360px; margin: 0 auto; padding: clamp(24px, 4vw, 64px);">
+    <div style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #A9CBD4; display: flex; flex-wrap: wrap; gap: 8px 24px;"><span style="color: #EDECE8; font-weight: 600;">RECORD 05</span><span>THE REGION AS A QUEUE OF MISSIONS</span></div>
+    <h2 style="font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(30px, 4.6vw, 56px); line-height: 1.06; margin: clamp(14px, 2vh, 24px) 0 0 0; max-width: 18ch; text-wrap: balance;">5,800 km², one mission at a time.</h2>
+    <p style="font-size: clamp(16px, 1.6vw, 18px); line-height: 1.6; margin: clamp(14px, 2vh, 22px) 0 0 0; max-width: 44ch; color: rgba(237,236,232,0.85);">The region is captured as a queue of planned missions: coverage laid over real relief, terrain-following flight so a ridge gets the same detail as a valley, launch points reachable by mountain road.</p>
+  </div>
+</section>
+
+<!-- RECORD 06 · text lower-right · scene: FPV drone wireframe rotating in place -->
+<section data-screen-label="Record 06" data-media="" style="position: relative; height: 100svh; min-height: 560px; background: #22262A; overflow: hidden;">
+  <div data-media-inner="" style="position: absolute; inset: -4%; will-change: transform;">
+    <!-- <video autoplay muted loop playsinline poster="posters/06.jpg" src="loops/06-frame-zoom.mp4" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video> -->
+    <canvas data-scanfield="drone" style="position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+  </div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(20,23,26,0.72), rgba(20,23,26,0.24) 40%, transparent 62%);"></div>
+  <div style="position: absolute; top: 20px; left: clamp(24px, 4vw, 64px); font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgba(169,203,212,0.7);">SVN / 06 · SILENT LOOP<br>ONE FRAME AT 100% — ROOF, FENCE, WOODPILE</div>
+  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; text-align: right; max-width: 1360px; margin: 0 auto; padding: clamp(24px, 4vw, 64px);">
+    <div style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #A9CBD4; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px 24px;"><span style="color: #EDECE8; font-weight: 600;">RECORD 06</span><span>OUR OWN APPROACH TO FLIGHT AND SCAN AREAS</span></div>
+    <h2 style="font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(30px, 4.6vw, 56px); line-height: 1.06; margin: clamp(14px, 2vh, 24px) 0 0 0; max-width: 18ch; text-wrap: balance;">A 256-megapixel eye.</h2>
+    <p style="font-size: clamp(16px, 1.6vw, 18px); line-height: 1.6; margin: clamp(14px, 2vh, 22px) 0 0 0; max-width: 44ch; color: rgba(237,236,232,0.85);">The primary sensor shoots 256 megapixels per frame. In mountains where every launch is logistics and risk, resolution is economics: more detail from higher altitude, more region per flying hour.</p>
+  </div>
+</section>
+
+<!-- RECORD 07 · text upper-left · scene: height-field, vegetation materializing by elevation belt (scroll-driven) -->
+<section data-screen-label="Record 07" data-media="" style="position: relative; height: 100svh; min-height: 560px; background: #22262A; overflow: hidden;">
+  <div data-media-inner="" style="position: absolute; inset: -4%; will-change: transform;">
+    <!-- <video autoplay muted loop playsinline poster="posters/07.jpg" src="loops/07-forest-assembly.mp4" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video> -->
+    <canvas data-scanfield="biome" style="position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+  </div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(20,23,26,0.72), rgba(20,23,26,0.24) 40%, transparent 62%);"></div>
+  <div style="position: absolute; bottom: 20px; right: clamp(24px, 4vw, 64px); font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgba(169,203,212,0.7); text-align: right;">SVN / 07 · SILENT LOOP<br>FOREST ASSEMBLING ACROSS A VALLEY</div>
+  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; text-align: left; max-width: 1360px; margin: 0 auto; padding: clamp(24px, 4vw, 64px);">
+    <div style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #A9CBD4; display: flex; flex-wrap: wrap; gap: 8px 24px;"><span style="color: #EDECE8; font-weight: 600;">RECORD 07</span><span>A FOREST PLACED BY DATA</span></div>
+    <h2 style="font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(30px, 4.6vw, 56px); line-height: 1.06; margin: clamp(14px, 2vh, 24px) 0 0 0; max-width: 18ch; text-wrap: balance;">The forest plants itself.</h2>
+    <p style="font-size: clamp(16px, 1.6vw, 18px); line-height: 1.6; margin: clamp(14px, 2vh, 22px) 0 0 0; max-width: 44ch; color: rgba(237,236,232,0.85);">Real species from the region's elevation belts, captured tree by tree and rebuilt as hyper-real impostors at splat-level quality — grass and fur included — inside a mobile budget. Segmentation masks decide where each species grows: the forest is placed by data, not by hand.</p>
+  </div>
+</section>
+
+<!-- RECORD 08 · text upper-right · scene: node graph executing left to right (scroll-driven) -->
+<section data-screen-label="Record 08" data-media="" style="position: relative; height: 100svh; min-height: 560px; background: #22262A; overflow: hidden;">
+  <div data-media-inner="" style="position: absolute; inset: -4%; will-change: transform;">
+    <!-- <video autoplay muted loop playsinline poster="posters/08.jpg" src="loops/08-pipeline.mp4" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video> -->
+    <canvas data-scanfield="pipeline" style="position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+  </div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(20,23,26,0.72), rgba(20,23,26,0.24) 40%, transparent 62%);"></div>
+  <div style="position: absolute; bottom: 20px; left: clamp(24px, 4vw, 64px); font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgba(169,203,212,0.7);">SVN / 08 · SILENT LOOP<br>RAW IMAGERY BECOMING AN INTERACTIVE LEVEL</div>
+  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-end; text-align: right; max-width: 1360px; margin: 0 auto; padding: clamp(24px, 4vw, 64px);">
+    <div style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #A9CBD4; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px 24px;"><span style="color: #EDECE8; font-weight: 600;">RECORD 08</span><span>MISSIONS IN, FINISHED LEVELS OUT</span></div>
+    <h2 style="font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(30px, 4.6vw, 56px); line-height: 1.06; margin: clamp(14px, 2vh, 24px) 0 0 0; max-width: 18ch; text-wrap: balance;">From memory card to a place.</h2>
+    <p style="font-size: clamp(16px, 1.6vw, 18px); line-height: 1.6; margin: clamp(14px, 2vh, 22px) 0 0 0; max-width: 44ch; color: rgba(237,236,232,0.85);">A pipeline turns raw missions into finished pieces of the world — automatically. The unit of that world is not a map tile: it's a complete interactive level, delivered for exactly the place you need. A region of this size cannot be built by hand — so we built the factory.</p>
+  </div>
+</section>
+
+<!-- RECORD 09 · text lower-left · scene: scans of one site stacking into existence (scroll-driven) -->
+<section data-screen-label="Record 09" data-media="" style="position: relative; height: 100svh; min-height: 560px; background: #22262A; overflow: hidden;">
+  <div data-media-inner="" style="position: absolute; inset: -4%; will-change: transform;">
+    <!-- <video autoplay muted loop playsinline poster="posters/09.jpg" src="loops/09-time-scrub.mp4" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video> -->
+    <canvas data-scanfield="timeline" style="position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+  </div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(20,23,26,0.72), rgba(20,23,26,0.24) 40%, transparent 62%);"></div>
+  <div style="position: absolute; top: 20px; right: clamp(24px, 4vw, 64px); font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgba(169,203,212,0.7); text-align: right;">SVN / 09 · SILENT LOOP<br>ONE SITE SCRUBBED THROUGH MONTHS</div>
+  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; text-align: left; max-width: 1360px; margin: 0 auto; padding: clamp(24px, 4vw, 64px);">
+    <div style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #A9CBD4; display: flex; flex-wrap: wrap; gap: 8px 24px;"><span style="color: #EDECE8; font-weight: 600;">RECORD 09</span><span>THE SAME PLACE, AGAIN AND AGAIN</span></div>
+    <h2 style="font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(30px, 4.6vw, 56px); line-height: 1.06; margin: clamp(14px, 2vh, 24px) 0 0 0; max-width: 18ch; text-wrap: balance;">An archive with a time axis.</h2>
+    <p style="font-size: clamp(16px, 1.6vw, 18px); line-height: 1.6; margin: clamp(14px, 2vh, 22px) 0 0 0; max-width: 44ch; color: rgba(237,236,232,0.85);">Missions re-fly the same routes, and a single site accumulates dozens of scans — a place you can scrub through time: something rising, something restored, a glacier retreating. Other twins store snapshots. This archive stores the film.</p>
+  </div>
+</section>
+
+<!-- RECORD 10 — footer on limestone, the hero's quiet echo -->
+<footer data-screen-label="Record 10 · Footer" style="background: #EDECE8; color: #24282C;">
+  <div style="max-width: 1360px; margin: 0 auto; padding: clamp(72px, 14vh, 160px) clamp(24px, 4vw, 64px) 40px clamp(24px, 4vw, 64px);">
+    <div style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #70767A;">RECORD 10 · COOPERATION</div>
+    <h2 style="font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(32px, 5vw, 64px); line-height: 1.06; margin: clamp(16px, 2.5vh, 28px) 0 24px 0; max-width: 20ch; text-wrap: balance;">Partners, institutions, researchers.</h2>
+    <p style="font-size: clamp(16px, 1.6vw, 18px); line-height: 1.65; margin: 0 0 clamp(40px, 7vh, 72px) 0; max-width: 54ch; color: #4A5054;">We work with the regional administration and cultural institutions, and we're open to technology and expedition partners. For the full project deck — write to us.</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 24px 56px; align-items: center; margin-bottom: clamp(40px, 7vh, 72px);">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <img src="uploads/pasted-1784118914515-0.png" alt="Flag of Mestia Municipality" style="height: 44px; width: auto; display: block;">
+        <span style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #4A5054;">MESTIA MUNICIPALITY<br>GOVERNMENT</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <img src="uploads/pasted-1784118990259-0.png" alt="Coat of arms of Georgia" style="height: 52px; width: auto; display: block;">
+        <span style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #4A5054;">GOVERNMENT<br>OF GEORGIA</span>
+      </div>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 20px 48px; align-items: baseline; margin-bottom: clamp(64px, 12vh, 128px);">
+      <a href="mailto:hello@libraryabout.com" style="font-family: 'Gloock', serif; font-size: clamp(20px, 2.6vw, 30px); color: #24282C; min-height: 44px; display: inline-flex; align-items: center;">hello@libraryabout.com</a>
+      <a href="#" style="font-family: 'Martian Mono', monospace; font-size: 12px; letter-spacing: 0.08em; color: #24282C; min-height: 44px; display: inline-flex; align-items: center;">PROJECT DECK · PDF</a>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px 32px; font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: #70767A;">
+      <span>LIBRARY ABOUT · DIGITAL ARCHIVES</span>
+      <span>SVANETI · GEORGIA · 2026</span>
+      <span>LIBRARYABOUT.COM/SVANETI</span>
+    </div>
+  </div>
+</footer>
+
+<script src="svaneti-geo.js"></script>
+<script src="scanfields.js"></script>
+<script>
+/* Boot — ported from the Design Component logic: create a ScanField per media
+   block, run it only while on screen, feed scroll progress to the scroll-driven
+   scenes (05/07/08/09) and apply the subtle scale drift. */
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fields = new Map();
+  var medias = Array.prototype.slice.call(document.querySelectorAll('[data-media]'));
+  medias.forEach(function (m) {
+    var c = m.querySelector('canvas[data-scanfield]');
+    if (c && window.ScanField) fields.set(m, window.ScanField.create(c, c.getAttribute('data-scanfield')));
+  });
+  function setActive(m, on) {
+    var v = m.querySelector('video');
+    var f = fields.get(m);
+    if (on && !reduced) {
+      if (v && v.paused) v.play().catch(function () {});
+      if (f) f.start();
+    } else {
+      if (v && !v.paused) v.pause();
+      if (f) f.stop();
+    }
+  }
+  if (!reduced) {
+    var ticking = false;
+    var update = function () {
+      ticking = false;
+      var vh = window.innerHeight;
+      medias.forEach(function (m) {
+        var r = m.getBoundingClientRect();
+        var visible = r.bottom > 0 && r.top < vh;
+        setActive(m, visible);
+        if (visible) {
+          var p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+          var f = fields.get(m);
+          if (f) f.setProgress(p); // scenes 5/7/8/9 tie their progression to this
+          var inner = m.querySelector('[data-media-inner]');
+          if (inner) inner.style.transform = 'scale(' + (1 + 0.05 * p).toFixed(4) + ')';
+        }
+      });
+    };
+    var onScroll = function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  } else {
+    // Reduced motion: static frames (fields already drew one at full progress), no autoplay.
+    medias.forEach(function (m) {
+      var v = m.querySelector('video');
+      if (v) { v.removeAttribute('autoplay'); v.pause(); }
+    });
+  }
+})();
+</script>
+</body>
 </html>
