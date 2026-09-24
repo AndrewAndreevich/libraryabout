@@ -90,14 +90,43 @@ async function main(){
   const anchor=mindar.addAnchor(0);
 
   setStatus('loading model…');
-  const gltf=await new GLTFLoader().loadAsync('/svaneti/models/ushba.glb');
+  const gltf=await new GLTFLoader().loadAsync('/svaneti/models/ushba.glb?v=rebake');
   const model=gltf.scene;
-  const tex=await new THREE.TextureLoader().loadAsync('/svaneti/models/ushba_tex.jpg');
+  const tex=await new THREE.TextureLoader().loadAsync('/svaneti/models/ushba_tex.jpg?v=rebake');
   tex.flipY=false; tex.colorSpace=THREE.SRGBColorSpace; tex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
-  model.traverse(o=>{ if(o.isMesh) o.material=new THREE.MeshStandardMaterial({map:tex,roughness:0.95,metalness:0}); });
-  // scan lean-correction: base->peak -> +Y
-  model.quaternion.premultiply(new THREE.Quaternion().setFromUnitVectors(
-    new THREE.Vector3(-0.1547,0.9854,-0.0707).normalize(), new THREE.Vector3(0,1,0)));
+
+  // Split the growing route (rock_path) from the mountain (rock_model_b).
+  // Mountain -> baked texture; path -> glowing route with a bottom→top reveal.
+  const pathReveal={value:0}; let hasPath=false;
+  model.traverse(o=>{
+    if(!o.isMesh) return;
+    const isPath = o.name==='rock_path' || (o.parent && o.parent.name==='rock_path');
+    if(isPath){
+      hasPath=true;
+      o.geometry.computeBoundingBox();
+      const bb=o.geometry.boundingBox;
+      const mat=new THREE.MeshStandardMaterial({color:0xbfe3ff,emissive:0x1f6bff,emissiveIntensity:1.0,roughness:0.4,metalness:0});
+      mat.onBeforeCompile=(sh)=>{
+        sh.uniforms.uReveal=pathReveal;
+        sh.uniforms.uRevMin={value:bb.min.y};
+        sh.uniforms.uRevMax={value:bb.max.y};
+        sh.vertexShader='varying float vRevY;\n'+sh.vertexShader
+          .replace('#include <begin_vertex>','#include <begin_vertex>\n  vRevY=position.y;');
+        sh.fragmentShader='varying float vRevY;\nuniform float uReveal,uRevMin,uRevMax;\n'+sh.fragmentShader
+          .replace('#include <dithering_fragment>',
+            '#include <dithering_fragment>\n'+
+            '  float _h=(vRevY-uRevMin)/max(1e-4,(uRevMax-uRevMin));\n'+
+            '  if(_h>uReveal) discard;\n'+
+            '  float _edge=1.0-smoothstep(0.0,0.10,uReveal-_h);\n'+
+            '  gl_FragColor.rgb+=_edge*vec3(0.5,0.8,1.0);');
+      };
+      mat.customProgramCacheKey=()=>'rockPathReveal';
+      o.material=mat;
+    } else {
+      o.material=new THREE.MeshStandardMaterial({map:tex,roughness:0.95,metalness:0});
+    }
+  });
+  // rock_model_b is authored Z-up in Blender -> already +Y-up in glTF; no lean hack.
   model.updateWorldMatrix(true,true);
   const box=new THREE.Box3().setFromObject(model); const size=box.getSize(new THREE.Vector3()); const center=box.getCenter(new THREE.Vector3());
   norm=0.7/Math.max(size.x,size.y,size.z);
@@ -119,16 +148,21 @@ async function main(){
   applyAll();
   wireButtons(gridGroup);
 
-  anchor.onTargetFound=()=>{ setStatus('tracking'); };
-  anchor.onTargetLost =()=>{ setStatus('point the camera at the image'); };
+  let found=false;
+  anchor.onTargetFound=()=>{ found=true; setStatus('tracking'); };
+  anchor.onTargetLost =()=>{ found=false; setStatus('point the camera at the image'); };
 
   setStatus('starting camera…');
   try{ await mindar.start(); }
   catch(e){ setStatus('camera error: '+(e&&e.message||e)); return; }
   setStatus('point the camera at the image');
+  const clock=new THREE.Clock();
+  const REVEAL_RATE=1/1.3; // full bottom→top grow in ~1.3s; reverses when target lost
   renderer.setAnimationLoop(()=>{
+    const dt=Math.min(0.05,clock.getDelta());
+    pathReveal.value=THREE.MathUtils.clamp(pathReveal.value+(found?REVEAL_RATE:-REVEAL_RATE)*dt,0,1);
     const v=anchor.group.visible;
-    debugEl.textContent=`${v?'FOUND':'—'}  scale ${SCALE_STEPS[scaleIdx].toFixed(2)} | rot ${degs(glbRot)} | pos ${poss(glbPos)}`;
+    debugEl.textContent=`${v?'FOUND':'—'}  grow ${(pathReveal.value*100|0)}%${hasPath?'':' (no path!)'}  scale ${SCALE_STEPS[scaleIdx].toFixed(2)} | rot ${degs(glbRot)} | pos ${poss(glbPos)}`;
     renderer.render(scene,camera);
   });
 }
